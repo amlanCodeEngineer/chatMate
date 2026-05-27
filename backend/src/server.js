@@ -1,9 +1,9 @@
-
 import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authroute.js';
 import messageRoutes from './routes/messageroute.js';
 import path from 'path'; //build in node module for handling file paths
+import { connectDB } from './lib/db.js';
 
 dotenv.config();
 
@@ -12,6 +12,9 @@ const app = express();
 const __dirname = path.resolve();
 
 const PORT = process.env.PORT || 3100;
+
+//middleware
+app.use(express.json()) // - req.body will be undefined without this, it parses incoming JSON requests and puts the parsed data in req.body
 
 app.use("/api/auth", authRoutes)
 app.use("/api/message", messageRoutes)
@@ -26,4 +29,5 @@ if(process.env.NODE_ENV === "production"){
 
 app.listen(PORT, () => {
   console.log('Server is running on port: ' +  PORT);
+  connectDB()
 });
